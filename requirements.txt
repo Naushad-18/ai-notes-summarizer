@@ -1,0 +1,8 @@
+streamlit
+transformers
+torch
+PyMuPDF
+pytesseract
+Pillow
+textblob
+streamlit-lottie

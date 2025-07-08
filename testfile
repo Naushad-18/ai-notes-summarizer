@@ -1,0 +1,10 @@
+import os
+
+file_path = "typing.json"
+
+print("Current directory:", os.getcwd())
+
+if os.path.exists(file_path):
+    print("✅ typing.json FOUND!")
+else:
+    print("❌ typing.json NOT FOUND.")
