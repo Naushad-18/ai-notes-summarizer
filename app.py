@@ -1,14 +1,8 @@
 import streamlit as st
 import fitz  # PyMuPDF
-import pytesseract
-from PIL import Image
 import io
 import time
 from summarizer import summarize_text
-import os
-
-# Set path to Tesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 # Page config
 st.set_page_config(page_title="AI Notes & PDF Summarizer", layout="centered")
@@ -60,17 +54,12 @@ show_manual = st.checkbox("📝 I want to type or paste text instead", key="manu
 if show_manual:
     manual_text = st.text_area("Paste your text here:", height=200)
 
-# OCR for PDF
+# Extract text from PDF (no OCR)
 def extract_text_from_pdf(file):
     text = ""
     with fitz.open(stream=file.read(), filetype="pdf") as doc:
-        for i, page in enumerate(doc):
-            if i >= 5:
-                break
-            img = page.get_pixmap()
-            img_bytes = img.tobytes("png")
-            image = Image.open(io.BytesIO(img_bytes))
-            text += pytesseract.image_to_string(image) + "\n"
+        for page in doc:
+            text += page.get_text()
     return text
 
 # Extract input text
@@ -95,7 +84,7 @@ if full_text.strip():
         points = [line.strip() for line in summary.split(".") if len(line.strip()) > 0]
         final_summary = ""
         for point in points:
-            bullet = f"• {point.strip().replace('Asticial', 'Artificial').replace('LI', 'AI').replace('Al', 'AI')}."
+            bullet = f"• {point.strip().replace('Asticial', 'Artificial').replace('LI', 'AI').replace('Al', 'AI')} ."
             st.markdown(bullet)
             final_summary += bullet + "\n"
             time.sleep(0.25)
